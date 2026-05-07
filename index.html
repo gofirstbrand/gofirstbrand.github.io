@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GoFirst — Lead by example</title>
+  <meta name="description" content="A brand for people who lead by doing. The app, the gear, the standard." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0f1115;
+      --bg-elev:  #171a21;
+      --surface:  #1c2029;
+      --surface2: #242834;
+      --border:   #2a2f3a;
+      --text:     #e7e9ee;
+      --dim:      #8a909c;
+      --faint:    #5a5f6a;
+      --white:    #ffffff;
+      --success:  #10b981;
+      --radius:   14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── BACKGROUND ATMOSPHERE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,255,255,0.04), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 90% 100%, rgba(16, 185, 129, 0.03), transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 60px;
+      background: rgba(15, 17, 21, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .nav-logo svg {
+      height: 22px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--dim);
+      transition: color .15s;
+    }
+    .nav-link:hover { color: var(--text); }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      color: var(--bg);
+      border: none;
+      border-radius: 100px;
+      padding: 9px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .15s, transform .15s;
+    }
+    .nav-cta:hover { opacity: .85; transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 180px 64px 80px;
+      text-align: left;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp .8s ease .1s forwards;
+    }
+
+    .eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      flex-shrink: 0;
+    }
+
+    .hero h1 {
+      font-size: clamp(52px, 8vw, 112px);
+      font-weight: 800;
+      line-height: 0.98;
+      letter-spacing: -.035em;
+      color: var(--white);
+      margin-bottom: 28px;
+      max-width: 920px;
+      opacity: 0;
+      animation: fadeUp 1s ease .25s forwards;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--dim);
+    }
+
+    .hero-sub {
+      font-size: clamp(17px, 1.6vw, 20px);
+      line-height: 1.55;
+      color: var(--dim);
+      margin-bottom: 40px;
+      max-width: 560px;
+      opacity: 0;
+      animation: fadeUp 1s ease .4s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 1s ease .55s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--white);
+      color: var(--bg);
+      border: none;
+      border-radius: 100px;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .15s, transform .15s;
+    }
+    .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--dim);
+      border: none;
+      padding: 14px 4px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color .15s;
+    }
+    .btn-secondary:hover { color: var(--text); }
+
+    /* ── OFFERINGS ── */
+    .offerings {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 64px 100px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .offering {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: border-color .25s ease, transform .25s ease, background .25s ease;
+      opacity: 0;
+      animation: fadeUp 1s ease .75s forwards;
+    }
+
+    .offering:nth-child(2) {
+      animation-delay: .9s;
+    }
+
+    .offering:hover {
+      border-color: rgba(255,255,255,0.18);
+      transform: translateY(-2px);
+      background: var(--bg-elev);
+    }
+
+    .offering::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle at top right, rgba(255,255,255,0.04), transparent 70%);
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+
+    .offering:hover::after {
+      opacity: 1.5;
+    }
+
+    .offering-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 18px;
+    }
+
+    .offering-title {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+
+    .offering-desc {
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--dim);
+      margin-bottom: auto;
+      padding-bottom: 32px;
+      max-width: 380px;
+    }
+
+    .offering-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      transition: gap .25s ease;
+    }
+
+    .offering:hover .offering-cta {
+      gap: 14px;
+    }
+
+    .offering-cta svg {
+      transition: transform .25s ease;
+    }
+
+    .offering:hover .offering-cta svg {
+      transform: translateX(2px);
+    }
+
+    /* App card visual — mini exec ring */
+    .offering-visual {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 180px;
+      height: 180px;
+      opacity: 0.5;
+      transition: opacity .25s ease, transform .4s ease;
+    }
+
+    .offering:hover .offering-visual {
+      opacity: 0.8;
+      transform: rotate(-4deg);
+    }
+
+    .ring-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    /* Shop card visual — wordmark */
+    .offering-wordmark {
+      position: absolute;
+      bottom: 28px;
+      right: 32px;
+      font-size: 56px;
+      font-weight: 900;
+      letter-spacing: -.03em;
+      color: rgba(255,255,255,0.05);
+      line-height: 0.9;
+      text-align: right;
+      pointer-events: none;
+      transition: color .25s ease, transform .4s ease;
+    }
+
+    .offering:hover .offering-wordmark {
+      color: rgba(255,255,255,0.09);
+      transform: translateX(-4px);
+    }
+
+    /* ── MANIFESTO ── */
+    .manifesto {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 80px 64px 100px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .manifesto-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 32px;
+    }
+
+    .manifesto p {
+      font-size: clamp(22px, 2.6vw, 32px);
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -.015em;
+      color: var(--text);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .manifesto p em {
+      font-style: normal;
+      color: var(--dim);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 32px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 12px;
+      color: var(--faint);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      color: var(--faint);
+      transition: color .15s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 760px) {
+      nav { padding: 0 20px; }
+      .nav-links { gap: 18px; }
+      .nav-link { font-size: 13px; }
+
+      .hero {
+        padding: 140px 24px 60px;
+      }
+
+      .offerings {
+        grid-template-columns: 1fr;
+        padding: 40px 24px 80px;
+        gap: 16px;
+      }
+
+      .offering {
+        padding: 32px 28px;
+        min-height: 280px;
+      }
+
+      .offering-title { font-size: 30px; }
+      .offering-wordmark { font-size: 42px; bottom: 20px; right: 24px; }
+      .offering-visual { width: 140px; height: 140px; }
+
+      .manifesto {
+        padding: 60px 24px 80px;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 16px;
+        padding: 24px;
+        text-align: center;
+      }
+    }
+
+    /* ── SELECTION ── */
+    ::selection {
+      background: var(--white);
+      color: var(--bg);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="nav-logo" aria-label="GoFirst">
+      <svg viewBox="0 0 757.6 254.59" xmlns="http://www.w3.org/2000/svg" fill="white">
+        <polygon points="0 253.93 134.02 253.93 204.56 84.64 70.54 84.64 0 253.93"/>
+        <polygon points="171.62 253.93 305.64 253.93 376.18 84.64 242.16 84.64 171.62 253.93"/>
+        <polygon points="345.8 254.59 479.82 254.59 550.36 85.3 416.34 85.3 345.8 254.59"/>
+        <polygon points="553.04 169.29 687.06 169.29 757.6 0 623.58 0 553.04 169.29"/>
+      </svg>
+    </a>
+    <div class="nav-links">
+      <a href="#app" class="nav-link">App</a>
+      <a href="#shop" class="nav-link">Shop</a>
+      <a href="/app" class="nav-cta">Launch App</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Go first.<br><em>The rest will follow.</em></h1>
+
+    <p class="hero-sub">
+      A brand for people who lead by doing. Not by talking. Not by waiting. By going first &mdash; and letting the work do the rest.
+    </p>
+
+    <div class="hero-actions">
+      <a href="/app" class="btn-primary">
+        Launch the app
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+      <a href="#shop" class="btn-secondary">Shop the gear &rarr;</a>
+    </div>
+  </section>
+
+  <!-- OFFERINGS -->
+  <section class="offerings">
+
+    <a href="/app" class="offering" id="app">
+      <div class="offering-title">GOFIRST App</div>
+      <p class="offering-desc">
+        Plan the night before. Execute without negotiating. Analyze without excuses. The system that closes the gap between knowing and doing.
+      </p>
+      <span class="offering-cta">
+        Launch app
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </span>
+
+      <!-- Decorative ring visual -->
+      <div class="offering-visual" aria-hidden="true">
+        <svg class="ring-svg" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"/>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="white" stroke-width="6"
+            stroke-dasharray="263.9" stroke-dashoffset="79.2" stroke-linecap="round" opacity="0.6"/>
+        </svg>
+      </div>
+    </a>
+
+    <a href="/shop" class="offering" id="shop">
+      <div class="offering-title">GOFIRST Apparel</div>
+      <p class="offering-desc">
+        Wear the standard. Quiet pieces for people who'd rather their work speak than their clothes. Drops are limited.
+      </p>
+      <span class="offering-cta">
+        Browse shop
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </span>
+
+      <!-- Decorative wordmark -->
+      <div class="offering-wordmark" aria-hidden="true">
+        GO<br>FIRST
+      </div>
+    </a>
+
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto">
+    <p>
+      We don't wait for permission. We don't follow the herd. We don't post about it before we do it. <em>We just go &mdash; and let the work do the talking.</em>
+    </p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>&copy; 2026 GoFirst</span>
+    <div class="footer-links">
+      <a href="/app">App</a>
+      <a href="/shop">Shop</a>
+      <a href="mailto:hello@gofirst.com">Contact</a>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
